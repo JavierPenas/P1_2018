@@ -5,6 +5,30 @@ import numpy as np
 import cv2
 
 
+def median_filter(image, kernel_size):
+    #Calculamos la matriz del kernel
+    kernel = np.repeat(kernel_size, image.ndim)
+    kernel = np.ones(kernel)
+    #Calculamos imagen de salida
+    (imageH, imageW) = image.shape[:2]
+    output = np.zeros((imageH, imageW), dtype="float32")
+    pad = (kernel_size - 1) // 2
+    # TODO PREGUNTAR SI MEJOR REPLICAR BORDE O RELLENAR CON 0 | 1 | NO usarlos
+    image = cv2.copyMakeBorder(image, pad, pad, pad, pad,
+                               cv2.BORDER_REPLICATE)
+    # Iteramos la imagen
+    for y in np.arange(pad, imageH+pad): # Empezamos en el indice despues del padding, has la ultima casilla !=0
+        for x in np.arange(pad, imageW + pad):
+            # Recortamos la sumbatriz de la imagen que solapa con el kernel
+            window = image[y - pad:y + pad + 1, x - pad:x + pad + 1]
+            # Multiplicamos elemento por elemento la ventana de la imagen por el kernel
+            # Luego sumamos todos los resultados
+            k = np.median((window * kernel))
+            # Guardamos la suma en la posicion correspondiente de la matriz original (sin el padding)
+            output[y - pad, x - pad] = int(k)
+    return output.astype(np.uint8)
+
+
 def filter_image(image, kernel):
     # Calculamos las dimensione de la imagen y del kernel
     (imageH, imageW) = image.shape[:2]

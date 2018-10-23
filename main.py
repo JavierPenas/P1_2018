@@ -22,6 +22,13 @@ def test_gaussian_filter():
         gu.multiplot(imageList)
 
 
+def test_median_filter():
+    grayscale_image = gu.load_image(BASE_IMAGES_PATH + "/LenaRGB.jpg", gu.GRAY)
+    kernel_size = 7
+    img = filter.median_filter(grayscale_image, kernel_size)
+    gu.image_plot(img)
+
+
 def test_adjust_intensisty():
 
     # LOAD IMAGE IN GRAYSCALE MODE
@@ -60,4 +67,6 @@ if __name__ == "__main__":
     print("RUNNING P1 MAIN")
     # test_convolution()
     # test_gauss_kernel1D()
-    test_gaussian_filter()
+    # test_gaussian_filter()
+    test_median_filter()
+

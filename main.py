@@ -45,7 +45,7 @@ def test_convolution():
 
 
 def test_gauss_kernel1D():
-    sigma = 0.75
+    sigma = 30
     kernel = filter.gaussKernel1D(sigma)
     filter.plot_gaussian(kernel)
 

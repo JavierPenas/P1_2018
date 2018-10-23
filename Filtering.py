@@ -41,17 +41,17 @@ def filter_image(image, kernel):
 
 
 def gaussian_distribution(x, sigma):
-    exponent = -pow(x, 2) / 2*pow(sigma, 2)
+    exponent = -pow(x, 2) / 2 / pow(sigma, 2)
     fraction = 1 / (np.sqrt(2*np.pi) * sigma)
     return fraction * pow(np.e, exponent)
 
 
 def plot_gaussian(values_array):
-    x_axis = np.arange(0, len(values_array), 1)
+    x_axis = np.arange(0, len(values_array[0]), 1)
     plt.interactive(False)
     fig = plt.figure()
     axes = fig.add_subplot(111)
-    axes.plot(x_axis, values_array)
+    axes.plot(x_axis, values_array[0])
     plt.show()
     print("HELLO WAITINH")
 
@@ -60,11 +60,11 @@ def plot_gaussian(values_array):
 def gaussKernel1D(sigma):
 
     N = int(2 * np.floor(3*sigma) + 1)
-    kernel = np.zeros(N)
-    middle_index = int(np.floor((N/2) + 1))
+    kernel = np.zeros((1,N))
+    middle_index = int(np.floor((N/2) ))
     for x in np.arange(0, N):
-        gaussian_index = (x-middle_index+1)
-        kernel[x] = gaussian_distribution(gaussian_index, sigma)
+        gaussian_index = (x-middle_index)
+        kernel[0][x] = gaussian_distribution(gaussian_index, sigma)
     return kernel
 
 

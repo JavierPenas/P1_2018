@@ -8,26 +8,31 @@ import cv2
 def filter_image(image, kernel):
     # Calculamos las dimensione de la imagen y del kernel
     (imageH, imageW) = image.shape[:2]
-    (kernelH, kernelW) = kernel.shape[:2]
+    try:
+        (kernelH, kernelW) = kernel.shape[:2]
+    except ValueError:
+        kernelW = len(kernel)
+        kernelH = 1
 
     # Añadimos paddig de ceros en los bordes de la imagen
     # para poder aplicar el filtro sin reducir el tamaño original de esta
     # TODO si el filtro no es siempre cuadrado, cambiar el paddig para que haya padHorizontal padVertical
-    pad = (kernelW - 1) // 2
-    image = cv2.copyMakeBorder(image, pad, pad, pad, pad,
+    pad_horz = (kernelW - 1) // 2
+    pad_vert = (kernelH - 1) // 2
+    image = cv2.copyMakeBorder(image, pad_vert, pad_vert, pad_horz, pad_horz,
                                cv2.BORDER_REPLICATE)
     output = np.zeros((imageH, imageW), dtype="float32")
 
     # Iteramos la imagen
-    for y in np.arange(pad,imageH+pad): # Empezamos en el indice despues del padding, has la ultima casilla !=0
-        for x in np.arange(pad, imageW + pad):
+    for y in np.arange(pad_vert, imageH+pad_vert): # Empezamos en el indice despues del padding, has la ultima casilla !=0
+        for x in np.arange(pad_horz, imageW + pad_horz):
             # Recortamos la sumbatriz de la imagen que solapa con el kernel
-            window = image[y - pad:y + pad + 1, x - pad:x + pad + 1]
+            window = image[y - pad_vert:y + pad_vert + 1, x - pad_horz:x + pad_horz + 1]
             # Multiplicamos elemento por elemento la ventana de la imagen por el kernel
             # Luego sumamos todos los resultados
             k = (window * kernel).sum()
             # Guardamos la suma en la posicion correspondiente de la matriz original (sin el padding)
-            output[y - pad, x - pad] = k
+            output[y - pad_vert, x - pad_horz] = k
 
     # Durante la convolucion se realizan multiplicaciones que pueden dar resultados >255
     # para solucionarlo, re-escalamos la imagen dentro del rango
@@ -60,12 +65,12 @@ def plot_gaussian(values_array):
 def gaussKernel1D(sigma):
 
     N = int(2 * np.floor(3*sigma) + 1)
-    kernel = np.zeros((1,N))
+    kernel = []
     middle_index = int(np.floor((N/2) ))
     for x in np.arange(0, N):
         gaussian_index = (x-middle_index)
-        kernel[0][x] = gaussian_distribution(gaussian_index, sigma)
-    return kernel
+        kernel.append(gaussian_distribution(gaussian_index, sigma))
+    return np.asarray(kernel)
 
 
 def gaussianFilter(inImage, sigma):

@@ -2,8 +2,7 @@ import GenericUtilities as gu
 import HistogramUtilities as hu
 import Filtering as filter
 import numpy as np
-import cv2
-
+import TestingFunction as test
 
 #ENVIROMENTAL VARIABLES
 BASE_IMAGES_PATH = "/Users/javier/Documents/VA_PRACTICAS/Images"
@@ -13,8 +12,14 @@ def test_gaussian_filter():
     # LOAD IMAGE IN GRAYSCALE MODE
     grayscale_image = gu.load_image(BASE_IMAGES_PATH + "/LenaRGB.jpg", gu.GRAY)
     if grayscale_image is not None:
-        sigma = 0.625
-        filter.gaussianFilter(grayscale_image, sigma)
+        sigma = 30
+        filtered_image = filter.gaussianFilter(grayscale_image, sigma)
+        test_image = test.gaussianFilter(grayscale_image,sigma)
+        imageList = []
+        imageList.append(filtered_image)
+        imageList.append(grayscale_image)
+        imageList.append(test_image)
+        gu.multiplot(imageList)
 
 
 def test_adjust_intensisty():

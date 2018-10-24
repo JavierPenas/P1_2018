@@ -68,6 +68,7 @@ def image_plot(image):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
 def multiplot(imageList):
 
     final_frame = cv2.hconcat((imageList[0], imageList[1], imageList[2]))

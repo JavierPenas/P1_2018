@@ -8,6 +8,18 @@ import TestingFunction as test
 BASE_IMAGES_PATH = "/Users/javier/Documents/VA_PRACTICAS/Images"
 
 
+def test_high_boost():
+    # LOAD IMAGE IN GRAYSCALE MODE
+    grayscale_image = gu.load_image(BASE_IMAGES_PATH + "/LenaRGB.jpg", gu.GRAY)
+    if grayscale_image is not None:
+        filtered_image = filter.high_boost(grayscale_image, 0.5, 'gaussian', 1.5)
+        imageList = []
+        imageList.append(filtered_image)
+        imageList.append(grayscale_image)
+        imageList.append(grayscale_image)
+        gu.multiplot(imageList)
+
+
 def test_gaussian_filter():
     # LOAD IMAGE IN GRAYSCALE MODE
     grayscale_image = gu.load_image(BASE_IMAGES_PATH + "/LenaRGB.jpg", gu.GRAY)
@@ -68,5 +80,5 @@ if __name__ == "__main__":
     # test_convolution()
     # test_gauss_kernel1D()
     # test_gaussian_filter()
-    test_median_filter()
-
+    # test_median_filter()
+    test_high_boost()

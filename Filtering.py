@@ -1,8 +1,31 @@
 from skimage.exposure import rescale_intensity
-import matplotlib.rcsetup as rcsetup
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
+
+
+def high_boost(image, A, method, param):
+
+    #If method or param is None, we can't apply any filter
+    if (method is None) or (param is None):
+        return image
+    # Calculate the filtered image
+    if method == 'gaussian':
+        filtered_image = gaussianFilter(image, param)
+    else:
+        if method == 'median':
+            filtered_image = median_filter(image, param)
+        else:
+            #In case the specified filtering method is not valid
+            return None
+
+    if A >= 0:
+        #If A is a positive value, we preserve part of original image info
+        image = np.multiply(image, A).astype(np.uint8)
+        return np.subtract(image, filtered_image)
+    else:
+        #In other case, we only apply filter
+        return filtered_image
 
 
 def median_filter(image, kernel_size):
@@ -67,6 +90,7 @@ def filter_image(image, kernel):
 
     # return the output image
     return output
+
 
 
 def gaussian_distribution(x, sigma):

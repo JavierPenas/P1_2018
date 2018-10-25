@@ -10,6 +10,5 @@ def gaussian1D(sigma):
 
 
 def medianFilter(image, filterSize=None):
-    array = np.arange(1,5,1)
-    array.cpm
+
     return sg.medfilt(image, filterSize)

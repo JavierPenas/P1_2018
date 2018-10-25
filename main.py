@@ -47,7 +47,7 @@ def test_adjust_intensisty():
     grayscale_image = gu.load_image(BASE_IMAGES_PATH+"/LenaRGB.jpg", gu.GRAY)
     if grayscale_image is not None:
         # 3.1 Alteracion del rango dinamico
-        hu.adjust_intensity(grayscale_image, [], [0, 255])
+        hu.adjust_intensity(grayscale_image, [], [])
         # 3.2 Ecualizacion de histograma
 
 
@@ -77,8 +77,9 @@ def test_gauss_kernel1D():
 if __name__ == "__main__":
 
     print("RUNNING P1 MAIN")
+    test_adjust_intensisty()
     # test_convolution()
     # test_gauss_kernel1D()
     # test_gaussian_filter()
     # test_median_filter()
-    test_high_boost()
+    # test_high_boost()

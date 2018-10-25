@@ -1,56 +1,48 @@
 import GenericUtilities as gu
-import Variables as var
 import numpy as np
 
 
-def adjust_intensity(image, inRange, outRange):
+def adjust_intensity(image, in_range, out_range):
 
-    #Calculamos los límites del nuevo histograma
-    #Los valores de estas variables se almacenan en Variables.py
-    __set_in_range__(inRange, image)
-    __set_out_range__(outRange)
-    #Aplicamos la funcion de ajuste a cada pixel de la imagen. (Iteracion + Aplicacion)
-    res_image = gu.iterate_image(image, mod_range_fun)
-    # Podemos mostrar la imagen resultante si lo deseamos
-    # gu.image_plot(res_image)
+    if not gu.is_empty_list(image):
+        (rows, columns) = image.shape[:2]
+        i_min, i_max = __set_in_range__(in_range, image)
+        o_min, o_max = __set_out_range__(out_range)
+        ranges = {'IMIN': i_min, 'IMAX': i_max, 'OMIN': o_min, 'OMAX': o_max}
+
+        output = np.zeros((rows, columns), dtype="float32")
+        for y in np.arange(0, rows):
+            for x in np.arange(0, columns):
+                output[y, x] = adjust_intensity_fun(image[y][x], ranges)
+        return output
+    else:
+        print("[ERROR] image doesn't have any information")
+        return None
 
 
 #Funcion modificacion rango dinamico
-def mod_range_fun(value):
-    # print("[DEBUG] This is histogram function")
-    outputValue = var.GMIN_NORM + ((var.GMAX_NORM-var.GMIN_NORM)*(value-var.GMIN))/(var.GMAX-var.GMIN)
-    return int(outputValue)
+def adjust_intensity_fun(value,ranges):
+    output = ranges.get("OMIN") + ((ranges.get("OMAX")-ranges.get("OMIN"))*(value-ranges.get("IMIN")))/(ranges.get("IMAX")-ranges.get("IMIN"))
+    return int(output)
 
 
-# def transform_function(image):
-#     rows = len(imageMatrix)
-#     columns = len(imageMatrix[0])
-#     transformed_hist = (accumulative_hist(image) / (rows*columns)) * 255
-#     return transformed_hist
+def __set_in_range__(in_range, image):
 
-
-#LOCAL FUNCTIONS FOR GLOBALS DEFINITION
-def __set_in_range__(inRange,image):
-
-    if gu.is_empty_list(inRange):
-        var.GMAX = np.max(image)
-        var.GMIN = np.min(image)
-    else:
-        if (len(inRange) < 2) or (np.min(inRange) < 0):
-            print("[ERROR] Unexpected error: inRange values must be size 2 instead of 1")
+    if not gu.is_empty_list(in_range):
+        if len(in_range) == 2:
+            return in_range[0], in_range[1]
         else:
-            var.GMAX = inRange[1]
-            var.GMIN = inRange[0]
-
-
-def __set_out_range__(outRange):
-
-    if gu.is_empty_list(outRange):
-        var.GMAX_NORM = 1
-        var.GMIN_NORM = 0
+            print("[ERROR] Debe especificar dos o ningún valor para el rango de entrada")
     else:
-        if (len(outRange) < 2) or (np.min(outRange) < 0):
-            print("[ERROR] Unexpected error: inRange values must be size 2 instead of 1")
+        return np.min(image), np.max(image)
+
+
+def __set_out_range__(out_range):
+
+    if not gu.is_empty_list(out_range):
+        if len(out_range) == 2:
+            return out_range[0], out_range[1]
         else:
-            var.GMAX_NORM = outRange[1]
-            var.GMIN_NORM = outRange[0]
+            print("[ERROR] Debe especificar dos o ningún valor para el rango de salida")
+    else:
+        return 0, 1

@@ -10,20 +10,13 @@ COLOR = cv2.IMREAD_COLOR
 
 
 #Print a list of values in histogram plot
-#TODO entender bien como funciona, y implementar distintos modos de visualizar
-def print_histogram(list_values):
+def print_histogram(img, modified_img):
 
-    bins = np.linspace(math.ceil(min(list_values)),
-                       math.floor(max(list_values)),
-                       255)  # fixed number of bins
-    plt.xlim([min(list_values) - 5, max(list_values) + 5])
-
-    plt.hist(list_values, bins=bins, alpha=0.5)
-    plt.title('Random Gaussian data (fixed number of bins)')
-    plt.xlabel('variable X (20 evenly spaced bins)')
-    plt.ylabel('count')
-
+    plt.hist(img.ravel(), 256, [0, 1], color='b')
+    plt.hist(modified_img.ravel(), 256, [0, 1], color='r')
+    plt.legend(('original', 'modified'), loc='upper left')
     plt.show()
+    cv2.destroyAllWindows()
 
 
 #Comprueba si una lista es nula o vacia
@@ -59,7 +52,8 @@ def iterate_image(imageMatrix, funct):
 
 #Carga una imagen de disco, ubicada en el path indicado
 def load_image(path, color_type):
-    return cv2.imread(path, color_type)
+    image = cv2.imread(path, color_type)
+    return image/255
 
 
 #Muestra en pantalla una imagen cargada
@@ -70,7 +64,6 @@ def image_plot(image):
 
 
 def multiplot(imageList):
-
     final_frame = cv2.hconcat((imageList[0], imageList[1], imageList[2]))
     cv2.imshow('lena', final_frame)
     cv2.waitKey(0)

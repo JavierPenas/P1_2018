@@ -1,6 +1,8 @@
 import GenericUtilities as gu
 import numpy as np
 
+# TODO en la segunda funcion, para el histograma acumulado existe np.cumsum
+
 
 def adjust_intensity(image, in_range, out_range):
 
@@ -23,7 +25,7 @@ def adjust_intensity(image, in_range, out_range):
 #Funcion modificacion rango dinamico
 def adjust_intensity_fun(value,ranges):
     output = ranges.get("OMIN") + ((ranges.get("OMAX")-ranges.get("OMIN"))*(value-ranges.get("IMIN")))/(ranges.get("IMAX")-ranges.get("IMIN"))
-    return int(output)
+    return output
 
 
 def __set_in_range__(in_range, image):

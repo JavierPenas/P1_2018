@@ -63,8 +63,8 @@ def image_plot(image):
     cv2.destroyAllWindows()
 
 
-def multiplot(imageList):
-    final_frame = cv2.hconcat((imageList[0], imageList[1], imageList[2]))
+def multiplot(image1, image2, image3):
+    final_frame = cv2.hconcat((image1, image2, image3))
     cv2.imshow('lena', final_frame)
     cv2.waitKey(0)
     cv2.destroyAllWindows()

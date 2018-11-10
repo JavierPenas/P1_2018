@@ -5,6 +5,7 @@ import numpy as np
 import TestingFunction as test
 import cv2
 
+
 #ENVIROMENTAL VARIABLES
 BASE_IMAGES_PATH = "/Users/javier/Documents/VA_PRACTICAS/Images"
 

@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 
 
+
 def high_boost(image, A, method, param):
 
     # If method or param is None, we can't apply any filter
@@ -112,7 +113,7 @@ def gaussKernel1D(sigma):
 
 
 def gaussianFilter(inImage, sigma):
-
+    nd.binary_hit_or_miss()
     kernel1N = gaussKernel1D(sigma)
     kernelN1 = np.transpose([kernel1N])
 

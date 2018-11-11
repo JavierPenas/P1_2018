@@ -43,10 +43,8 @@ def gradient_image(image, operator):
 
 def edge_canny(image, sigma, t_low, t_high):
     # https://es.wikipedia.org/wiki/Algoritmo_de_Canny
-
+    # http://www.aishack.in/tutorials/canny-edge-detector/
     # Comprobamos que el umbral bajo no supere el alto
-    # if t_high < t_low :
-    #    return None
 
     # Aplicamos el filtro gaussiano
     image_gaussian = filter.gaussianFilter(image, sigma)
@@ -77,25 +75,23 @@ def edge_canny(image, sigma, t_low, t_high):
 def obtain_angle(orientacion):
     filas, columnas = orientacion.shape
 
-    # r_output = orientacion.copy()
-    m_output = orientacion.copy()
+    m_output = np.zeros(orientacion.shape)
 
     for i in range(0, filas):
         for j in range(0, columnas):
             angle = orientacion[i][j]
-            # r_output[i][j] = select_direction(angle)
             m_output[i][j] = select_direction2(angle)
 
     return m_output
 
 
 def select_direction2(angle):
+    #Pasamos los angulos a grados
     angle = angle * 180 / math.pi
+    # Tambien pasamos el valor a valor angulo positivo equivalente
     if angle < 0:
         angle += 360
-    # 45 degrees
-    if (angle >= 22.5 and angle < 67.5) or (angle >= 202.5 and angle < 247.5):
-        return 45
+
     # 0 degrees
     if (angle >= 337.5 or angle < 22.5) or (angle >= 157.5 and angle < 202.5):
         return 0
@@ -143,6 +139,7 @@ def get_normal_neighbours(values, orientacion, posicion_local):
     i, j = posicion_local
     max_filas, max_columnas = values.shape
     n1, n2 = 0, 0
+
     # Calculamos los vecinos en la normal segun la orientacion del pixel local
     if orientacion == 0:
         if j > 0:
@@ -200,12 +197,15 @@ def histerisis(gradient_values, angulos, pixeles_bordes, t_low, t_high):
         if not checked_pixels[i][j] and gradient_values[i][j] > t_high:
             checked_pixels[i][j] = True
             actual_position = (i, j)
+            # Añadimos el punto como elemento borde
             cannyEdges.append(actual_position)
+            # Obtenemos los vecinos del punto actual, para comprobar si tambien son bordes
             n1, n2 = get_perpendicular_neighbours(gradient_values, angulos[i][j], actual_position)
             if n1 is not None:
                 neighbour_list.append(n1)
             if n2 is not None:
                 neighbour_list.append(n2)
+            # Realizamos la comprobacion de si son bordes, con los vecinos encontrados
             while not gu.is_empty_list(neighbour_list):
                 neighb = neighbour_list.pop(0)
                 if not checked_pixels[neighb[0], neighb[1]]:
@@ -222,6 +222,8 @@ def histerisis(gradient_values, angulos, pixeles_bordes, t_low, t_high):
                             neighbour_list.append(nA)
                         if nB is not None:
                             neighbour_list.append(nB)
+
+    # Devolvemos una lista con todos aquellos puntos marcados como borde
     return cannyEdges
 
 

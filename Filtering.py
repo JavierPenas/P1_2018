@@ -113,7 +113,6 @@ def gaussKernel1D(sigma):
 
 
 def gaussianFilter(inImage, sigma):
-    nd.binary_hit_or_miss()
     kernel1N = gaussKernel1D(sigma)
     kernelN1 = np.transpose([kernel1N])
 

@@ -141,24 +141,57 @@ def closing(image,kernel, center):
     return output_img
 
 
+def hit_or_miss(inImage, objSEj, bgSE, center):
+
+    bg_image = inImage.copy()
+    bg_image[bg_image == 1] = -1
+    bg_image[bg_image == 0] = 1
+    bg_image[bg_image == -1] = 0
+
+    if not np.equal(np.sum(objSEj+bgSE), np.ones(objSEj.shape).sum()):
+        print("Error: elementos estructurantes incoherentes")
+    else:
+        output1 = erode(inImage, objSEj, center)
+        output2 = erode(bg_image, bgSE, center)
+        output_img = output1 + output2
+        output_img[output_img != 2] = 0
+        output_img[output_img == 2] = 1
+        return output_img
+
+
 if __name__ == "__main__":
 
     print("RUNNING P1 MAIN")
     grayscale_image = gu.load_image(BASE_IMAGES_PATH+"/erode.png", gu.GRAY)
 
-    image = np.array([[1., 0., 0., 0.],
-                      [1., 0., 0., 0.],
-                      [0., 1., 1., 0.],
-                      [0., 1., 0., 0.],
-                      [0., 1., 0., 0.]])
+    # image = np.array([[1., 0., 0., 0.],
+    #                   [1., 0., 0., 0.],
+    #                   [0., 1., 1., 0.],
+    #                   [0., 1., 0., 0.],
+    #                   [0., 1., 0., 0.]])
     # kern = np.array([[1., 1., 1.], [0., 0., 0.], [0., 0., 0.]])
     # kern = np.array([1., 1.])
-    kern2 = np.ones((25, 25))
+    # kern2 = np.ones((25, 25))
     # out = erode(image, kern, [0, 0])
     # out = dilate(image, kern, [0, 0])
-    out = dilate(grayscale_image, kern2, None)
-    gu.image_plot(out)
+    # out = dilate(grayscale_image, kern2, None)
+    # gu.image_plot(out)
 
+    #HIT OR MISS
+    image = np.array([[0., 0., 0., 0., 0., 0., 0.],
+                      [0., 0., 0., 1., 1., 0., 0.],
+                      [0., 0., 1., 1., 1., 1., 0.],
+                      [0., 0., 1., 1., 1., 1., 0.],
+                      [0., 0., 0., 1., 1., 0., 0.],
+                      [0., 0., 0., 1., 0., 0., 0.],
+                      [0., 0., 0., 0., 0., 0., 0.]])
+
+    kernOne = np.array([[1., 1.],
+                        [0., 1.]])
+
+    kernBg = np.array([[0., 0.],
+                       [1., 0.]])
+    hit_or_miss(image, kernOne, kernBg, [0,0])
 
 
 

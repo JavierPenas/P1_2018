@@ -65,20 +65,20 @@ def filter_image(image, kernel):
     kern_mid_col = k_columnas // 2
     kern_mid_row = k_filas // 2
 
-    #Creacion imagen para operar
+    # Creacion imagen para operar
     convolving_img = cv2.copyMakeBorder(image, kern_mid_row, kern_mid_row, kern_mid_col, kern_mid_col,
                                cv2.BORDER_CONSTANT, value=0)
-    #Creacion imagen salida
+    # Creacion imagen salida
     output_image = np.zeros(image.shape)
 
-    #Iteracion y convolucion
-    for i in range(0,filas):
+    # Iteracion y convolucion
+    for i in range(0, filas):
         for j in range(0, columnas):
-            #Window-sized kernel calculation
+            # Window-sized kernel calculation
             vert_size = i+k_filas
             horz_size = j+k_columnas
             window = convolving_img[i:vert_size, j:horz_size]
-            #Calculo de la convolucion
+            # Calculo de la convolucion
             k = np.sum(window * kernel)
             output_image[i, j] = k
 
